@@ -25,6 +25,33 @@ document.addEventListener('DOMContentLoaded', () => {
     'Моя любимая 🌸', 'Бесконечно твой 💫', 'Ты — счастье 🦋', 'Люблю без слов 🌹'
   ];
 
+  const LYRICS = [
+    { time: 30.0, text: "Наблюдаю за рассветом на побережье," },
+    { time: 33.9, text: "Пока мы оба стареем." },
+    { time: 37.5, text: "Я не в силах описать свои чувства," },
+    { time: 41.6, text: "Всё, что я знаю — мы возвращаемся домой." },
+    { time: 45.4, text: "Поэтому, пожалуйста, не отпускай меня," },
+    { time: 49.2, text: "Не отпускай меня..." },
+    { time: 53.2, text: "И если всё верно, мне плевать, сколько это займёт," },
+    { time: 60.7, text: "Пока я рядом с тобой," },
+    { time: 64.2, text: "Улыбка не сходит с моего лица." },
+    { time: 68.1, text: "Прибереги свои слёзы, всё будет хорошо," },
+    { time: 72.1, text: "Всё, что я знаю — ты здесь, со мной." },
+    { time: 79.9, text: "Смотрю на рассвет, пока мы стареем, о-о..." },
+    { time: 87.7, text: "Я не могу описать, о-о..." },
+    { time: 91.8, text: "Я хотел бы прожить каждое воспоминание о тебе" },
+    { time: 95.5, text: "Ещё один раз, прежде чем ты улетишь по ветру." },
+    { time: 99.5, text: "И всё то время, что мы провели," },
+    { time: 103.3, text: "Ожидая момента, когда свет заберёт нас," },
+    { time: 107.2, text: "Это были лучшие мгновения моей жизни." },
+    { time: 111.0, text: "Мне всё равно, сколько времени это займёт," },
+    { time: 118.7, text: "Пока я рядом с тобой," },
+    { time: 122.3, text: "Улыбка не сходит с моего лица." },
+    { time: 126.1, text: "Всё будет хорошо, просто не плачь," },
+    { time: 130.2, text: "Ведь ты здесь, ты со мной..." },
+    { time: 134.0, text: "Я не могу описать..." }
+  ];
+
   /* ========== STATE ========== */
   let isPlaying = false;
   let hearts = [];
@@ -32,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let lastTrailTime = 0;
   let longPressTimer = null;
   let isMobile = window.matchMedia('(max-width: 768px)').matches;
+  let lastLyricTime = -1;
 
   /* ========== CUSTOM CURSOR ========== */
   const customCursor = document.createElement('div');
@@ -399,6 +427,67 @@ document.addEventListener('DOMContentLoaded', () => {
       musicToggle.classList.add('playing');
     }
   });
+
+  /* ========== FLOATING LYRICS LOGIC ========== */
+  audio.addEventListener('timeupdate', () => {
+    const ct = audio.currentTime;
+    // Find the lyric that should be shown now
+    const currentLyric = LYRICS.find(l => ct >= l.time && ct < l.time + 0.5);
+    
+    if (currentLyric && currentLyric.time !== lastLyricTime) {
+      lastLyricTime = currentLyric.time;
+      showFloatingLyric(currentLyric.text);
+    }
+    
+    // Reset if audio is restarted or jumped back
+    if (ct < lastLyricTime) lastLyricTime = -1;
+  });
+
+  function showFloatingLyric(text) {
+    const lyricEl = document.createElement('div');
+    lyricEl.className = 'floating-lyric';
+    lyricEl.textContent = text;
+    
+    // Use random top/left directly to ensure bounds
+    const startX = 15 + Math.random() * 50; // 15% to 65%
+    const startY = 20 + Math.random() * 60; // 20% to 80%
+    
+    lyricEl.style.left = startX + '%';
+    lyricEl.style.top = startY + '%';
+    
+    // Generate small relative drifting shifts
+    const x1 = 0, y1 = 0;
+    const x2 = (Math.random() - 0.5) * 15;
+    const y2 = (Math.random() - 0.5) * 15;
+    const x3 = x2 + (Math.random() - 0.5) * 15;
+    const y3 = y2 + (Math.random() - 0.5) * 15;
+    const x4 = x3 + (Math.random() - 0.5) * 15;
+    const y4 = y3 + (Math.random() - 0.5) * 15;
+
+    // Random rotations
+    const r1 = (Math.random() - 0.5) * 15;
+    const r2 = (Math.random() - 0.5) * 10;
+    const r3 = (Math.random() - 0.5) * 10;
+    const r4 = (Math.random() - 0.5) * 15;
+
+    // Set CSS variables
+    lyricEl.style.setProperty('--move-x1', `${x1}px`);
+    lyricEl.style.setProperty('--move-y1', `${y1}px`);
+    lyricEl.style.setProperty('--move-x2', `${x2}px`);
+    lyricEl.style.setProperty('--move-y2', `${y2}px`);
+    lyricEl.style.setProperty('--move-x3', `${x3}px`);
+    lyricEl.style.setProperty('--move-y3', `${y3}px`);
+    lyricEl.style.setProperty('--move-x4', `${x4}px`);
+    lyricEl.style.setProperty('--move-y4', `${y4}px`);
+
+    lyricEl.style.setProperty('--rot1', `${r1}deg`);
+    lyricEl.style.setProperty('--rot2', `${r2}deg`);
+    lyricEl.style.setProperty('--rot3', `${r3}deg`);
+    lyricEl.style.setProperty('--rot4', `${r4}deg`);
+    
+    document.body.appendChild(lyricEl);
+    setTimeout(() => lyricEl.remove(), 8000);
+  }
 
   /* ========== SCROLL PROGRESS ========== */
   window.addEventListener('scroll', () => {
