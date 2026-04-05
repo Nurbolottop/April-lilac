@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="С годовщиной — наша история любви" />
+  <title>С годовщиной ❤️</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💜</text></svg>" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Scroll Progress -->
+  <div class="scroll-progress" id="scroll-progress"></div>
+
+  <!-- Aurora Background -->
+  <div class="aurora"></div>
+
+  <!-- Floating Particles -->
+  <div class="particles-container"></div>
+
+  <!-- Hearts Canvas -->
+  <canvas id="hearts-canvas"></canvas>
+
+  <!-- Background Music -->
+  <audio id="bg-music" loop preload="auto">
+    <source src="assets/Bakr - Сирень (Lyric Video).mp3" type="audio/mpeg" />
+  </audio>
+
+  <!-- ========== START SCREEN ========== -->
+  <div class="start-screen" id="start-screen">
+    <div class="start-content">
+      <div class="start-emoji">💜</div>
+      <p class="start-text">У&nbsp;меня для тебя<br>кое&#8209;что есть…</p>
+      <button class="start-button" id="start-btn">
+        Нажми <span class="heart-icon">❤️</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ========== MAIN CONTENT ========== -->
+  <div class="main-content" id="main-content">
+
+    <!-- ═══════ HERO: Основная фотография ═══════ -->
+    <section class="story-section hero-section" id="section-hero">
+      <div class="hero-card">
+        <div class="hero-photo-frame">
+          <img src="assets/images/we_основной.jpg" alt="Мы" class="hero-photo" loading="eager" />
+          <div class="hero-photo-border"></div>
+        </div>
+        <h1 class="hero-title">Наша история 💜</h1>
+        <p class="hero-subtitle">Каждый момент с тобой — бесценный</p>
+      </div>
+    </section>
+
+    <!-- ═══════ Блок 1: Начало ═══════ -->
+    <section class="story-section" id="section-beginning">
+      <div class="story-card">
+        <div class="section-emoji">🌸</div>
+        <h2 class="section-title">Помнишь, как всё началось…</h2>
+        <p class="section-text">
+          Один взгляд — и&nbsp;всё перевернулось. Сердце забилось быстрее,
+          и&nbsp;я&nbsp;почувствовал, что рядом с&nbsp;тобой — <em>именно то место,
+          где я&nbsp;хочу быть</em>. Тот самый момент, когда мир стал
+          совершенно другим.
+        </p>
+      </div>
+    </section>
+
+    <!-- ═══════ Фото-блок 1: Первые моменты (3 фото) ═══════ -->
+    <section class="story-section photo-grid-section" id="section-grid1">
+      <div class="photo-grid-container">
+        <h2 class="photo-grid-title">Первые моменты вместе ✨</h2>
+        <div class="photo-grid grid-3">
+          <div class="photo-grid-item reveal-item" data-delay="0">
+            <img src="assets/images/we1.jpg" alt="Наш момент" loading="eager" />
+            <div class="photo-shine"></div>
+          </div>
+          <div class="photo-grid-item reveal-item" data-delay="150">
+            <img src="assets/images/we2.jpg" alt="Наш момент" loading="eager" />
+            <div class="photo-shine"></div>
+          </div>
+          <div class="photo-grid-item reveal-item" data-delay="300">
+            <img src="assets/images/we3.jpg" alt="Наш момент" loading="eager" />
+            <div class="photo-shine"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════ Блок 2: Перемены ═══════ -->
+    <section class="story-section" id="section-changes">
+      <div class="story-card">
+        <div class="section-emoji">🦋</div>
+        <h2 class="section-title">С тех пор многое изменилось…</h2>
+        <p class="section-text">
+          Мы&nbsp;вместе прошли через столько всего: смех и&nbsp;слёзы,
+          долгие разговоры до&nbsp;утра, первые путешествия и&nbsp;маленькие
+          ритуалы, которые стали <em>только нашими</em>.
+          Каждый день рядом с&nbsp;тобой — подарок.
+        </p>
+      </div>
+    </section>
+
+    <!-- ═══════ Видео: На природе ═══════ -->
+    <section class="story-section video-section" id="section-video1">
+      <div class="video-card reveal-item">
+        <h2 class="video-title">Наши приключения на природе 🌿</h2>
+        <div class="video-wrapper">
+          <video src="assets/video/природа.mp4" muted loop playsinline preload="metadata" class="story-video" data-autoplay></video>
+          <div class="video-play-overlay" data-target="video">
+            <span class="play-icon">▶</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════ Фото-блок 2: Моменты счастья (4 фото) ═══════ -->
+    <section class="story-section photo-grid-section" id="section-grid2">
+      <div class="photo-grid-container">
+        <h2 class="photo-grid-title">Моменты счастья 🥰</h2>
+        <div class="photo-grid grid-4">
+          <div class="photo-grid-item reveal-item" data-delay="0">
+            <img src="assets/images/we4.jpg" alt="Наш момент" loading="eager" />
+            <div class="photo-shine"></div>
+          </div>
+          <div class="photo-grid-item reveal-item" data-delay="100">
+            <img src="assets/images/we5.jpg" alt="Наш момент" loading="eager" />
+            <div class="photo-shine"></div>
+          </div>
+          <div class="photo-grid-item reveal-item" data-delay="200">
+            <img src="assets/images/we6.JPG" alt="Наш момент" loading="eager" />
+            <div class="photo-shine"></div>
+          </div>
+          <div class="photo-grid-item reveal-item" data-delay="300">
+            <img src="assets/images/we7.jpg" alt="Наш момент" loading="eager" />
+            <div class="photo-shine"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════ Блок 3: Значение ═══════ -->
+    <section class="story-section" id="section-meaning">
+      <div class="story-card">
+        <div class="section-emoji">💫</div>
+        <h2 class="section-title">Ты стала для меня больше, чем просто…</h2>
+        <p class="section-text">
+          Ты — мой лучший друг, моя опора, мой&nbsp;дом.
+          С&nbsp;тобой я&nbsp;узнал, что значит <em>по-настоящему любить</em>.
+          Ты&nbsp;научила меня быть лучше, мечтать смелее
+          и&nbsp;ценить каждое мгновение.
+        </p>
+      </div>
+    </section>
+
+    <!-- ═══════ Видео: На природе 2 ═══════ -->
+    <section class="story-section video-section" id="section-video2">
+      <div class="video-card reveal-item">
+        <h2 class="video-title">Ещё один день вместе 🌸</h2>
+        <div class="video-wrapper">
+          <video src="assets/video/природа2.mp4" muted loop playsinline preload="metadata" class="story-video" data-autoplay></video>
+          <div class="video-play-overlay" data-target="video">
+            <span class="play-icon">▶</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════ Фото-блок 3: Тёплые воспоминания (3 фото) ═══════ -->
+    <section class="story-section photo-grid-section" id="section-grid3">
+      <div class="photo-grid-container">
+        <h2 class="photo-grid-title">Тёплые воспоминания 💕</h2>
+        <div class="photo-grid grid-3">
+          <div class="photo-grid-item reveal-item" data-delay="0">
+            <img src="assets/images/we8.jpg" alt="Наш момент" loading="eager" />
+            <div class="photo-shine"></div>
+          </div>
+          <div class="photo-grid-item reveal-item" data-delay="150">
+            <img src="assets/images/we9.jpg" alt="Наш момент" loading="eager" />
+            <div class="photo-shine"></div>
+          </div>
+          <div class="photo-grid-item reveal-item" data-delay="300">
+            <img src="assets/images/we10.jpg" alt="Наш момент" loading="eager" />
+            <div class="photo-shine"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════ Блок 4: Особенный день ═══════ -->
+    <section class="story-section" id="section-special">
+      <div class="story-card">
+        <div class="section-emoji">✨</div>
+        <h2 class="section-title">И сегодня у нас особенный день…</h2>
+        <p class="section-text">
+          Сегодня — наш&nbsp;праздник. День, когда мы&nbsp;начали
+          писать <em>нашу историю</em>. И&nbsp;я&nbsp;хочу, чтобы ты&nbsp;знала:
+          каждая страница этой истории — самая любимая.
+        </p>
+      </div>
+    </section>
+
+    <!-- ═══════ Видео: Танцы ═══════ -->
+    <section class="story-section video-section" id="section-video3">
+      <div class="video-card reveal-item">
+        <h2 class="video-title">Наш танец 💃🕺</h2>
+        <div class="video-wrapper video-compact">
+          <video src="assets/video/танцы.mp4" muted loop playsinline preload="metadata" class="story-video" data-autoplay data-trim-end="5"></video>
+          <div class="video-play-overlay" data-target="video">
+            <span class="play-icon">▶</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════ Фото-блок 4: Каждый момент (3 фото) ═══════ -->
+    <section class="story-section photo-grid-section" id="section-grid4">
+      <div class="photo-grid-container">
+        <h2 class="photo-grid-title">Каждый момент — наш 🌹</h2>
+        <div class="photo-grid grid-3">
+          <div class="photo-grid-item reveal-item" data-delay="0">
+            <img src="assets/images/we11.jpg" alt="Наш момент" loading="eager" />
+            <div class="photo-shine"></div>
+          </div>
+          <div class="photo-grid-item reveal-item" data-delay="150">
+            <img src="assets/images/we12.jpg" alt="Наш момент" loading="eager" />
+            <div class="photo-shine"></div>
+          </div>
+          <div class="photo-grid-item reveal-item" data-delay="300">
+            <img src="assets/images/we.jpg" alt="Наш момент" loading="eager" />
+            <div class="photo-shine"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════ Таймер отношений ═══════ -->
+    <section class="timer-section" id="section-timer">
+      <h2 class="timer-title">Мы вместе уже… 💜</h2>
+      <div class="timer-container">
+        <div class="timer-block">
+          <div class="timer-value" id="timer-days">0</div>
+          <div class="timer-label">дней</div>
+        </div>
+        <div class="timer-block">
+          <div class="timer-value" id="timer-hours">0</div>
+          <div class="timer-label">часов</div>
+        </div>
+        <div class="timer-block">
+          <div class="timer-value" id="timer-mins">0</div>
+          <div class="timer-label">минут</div>
+        </div>
+        <div class="timer-block">
+          <div class="timer-value" id="timer-secs">0</div>
+          <div class="timer-label">секунд</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════ ФИНАЛ: Нынешнее фото + признание ═══════ -->
+    <section class="story-section final-section" id="section-final">
+      <div class="final-content">
+        <div class="final-photo-wrapper reveal-item">
+          <img src="assets/images/we_last.jpg" alt="Мы сейчас" class="final-photo" loading="eager" />
+          <div class="final-photo-glow"></div>
+        </div>
+        <div class="final-heart">💖</div>
+        <h2 class="final-title">С&nbsp;годовщиной, любимая&nbsp;❤️</h2>
+        <p class="final-message">
+          Я&nbsp;люблю&nbsp;тебя.<br>
+          Сегодня, завтра и&nbsp;всегда.
+        </p>
+        <p class="final-signature">— навсегда твой 💜</p>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Music Toggle -->
+  <button class="music-toggle" id="music-toggle" aria-label="Вкл/Выкл музыку">
+    <div class="equalizer">
+      <div class="eq-bar" style="height:8px"></div>
+      <div class="eq-bar" style="height:14px"></div>
+      <div class="eq-bar" style="height:5px"></div>
+      <div class="eq-bar" style="height:11px"></div>
+    </div>
+  </button>
+
+  <script src="script.js"></script>
+</body>
+</html>
