@@ -313,16 +313,26 @@ document.addEventListener('DOMContentLoaded', () => {
       entries.forEach(entry => {
         const video = entry.target;
         const overlay = video.parentElement.querySelector('.video-play-overlay');
-        if (entry.isIntersecting && entry.intersectionRatio >= 0.4) {
-          video.play().then(() => {
-            if (overlay) overlay.classList.add('hidden');
-          }).catch(() => {});
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.2) {
+          const tryPlay = () => {
+            video.play().then(() => {
+              if (overlay) overlay.classList.add('hidden');
+            }).catch(() => {
+              // Retry once after metadata loads
+              video.addEventListener('loadedmetadata', () => {
+                video.play().then(() => {
+                  if (overlay) overlay.classList.add('hidden');
+                }).catch(() => {});
+              }, { once: true });
+            });
+          };
+          tryPlay();
         } else {
           video.pause();
           if (overlay) overlay.classList.remove('hidden');
         }
       });
-    }, { threshold: [0.4] });
+    }, { threshold: [0.2] });
 
     // Click overlay to play/pause
     document.querySelectorAll('.video-play-overlay').forEach(overlay => {
@@ -383,9 +393,38 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  /* ========== PRELOAD ALL MEDIA ========== */
+  function preloadAllMedia() {
+    // Все фото которые будут нужны
+    const imageSrcs = [
+      'assets/images/we1.jpg', 'assets/images/we2.jpg', 'assets/images/we3.jpg',
+      'assets/images/we4.jpg', 'assets/images/we5.jpg', 'assets/images/we6.JPG',
+      'assets/images/we7.jpg', 'assets/images/we8.jpg', 'assets/images/we9.jpg',
+      'assets/images/we10.jpg', 'assets/images/we11.jpg', 'assets/images/we12.jpg',
+      'assets/images/we.jpg', 'assets/images/we_last.jpg'
+    ];
+
+    // Предзагружаем фото через скрытые Image объекты
+    imageSrcs.forEach(src => {
+      const img = new Image();
+      img.src = src;
+    });
+
+    // Предзагружаем видео — переключаем preload с metadata на auto
+    document.querySelectorAll('.story-video').forEach(video => {
+      video.preload = 'auto';
+      // Начинаем загрузку буфера
+      if (video.src) video.load();
+    });
+  }
+
   /* ========== START BUTTON ========== */
   startBtn.addEventListener('click', (e) => {
     e.stopPropagation();
+
+    // Сразу начинаем грузить все медиа в фоне
+    preloadAllMedia();
+
     startScreen.classList.add('hidden');
 
     setTimeout(() => {
