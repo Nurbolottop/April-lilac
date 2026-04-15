@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ========== STARS ========== */
   function createStars() {
     const container = document.querySelector('.particles-container');
-    for (let i = 0; i < 45; i++) {
+    for (let i = 0; i < 25; i++) {
       const star = document.createElement('div');
       star.className = 'star';
       star.style.left = Math.random()*100 + 'vw';
@@ -250,7 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const container = document.querySelector('.particles-container');
     const petals = ['🌸', '🩷', '✿', '❀', '🪻'];
     setInterval(() => {
-      if (document.querySelectorAll('.sakura-petal').length > 12) return;
+      if (document.querySelectorAll('.sakura-petal').length > 8) return;
       const petal = document.createElement('span');
       petal.className = 'sakura-petal';
       petal.textContent = petals[Math.floor(Math.random()*petals.length)];
@@ -260,7 +260,7 @@ document.addEventListener('DOMContentLoaded', () => {
       petal.style.setProperty('--sway', (60+Math.random()*120)*(Math.random()>0.5?1:-1)+'px');
       container.appendChild(petal);
       setTimeout(() => petal.remove(), parseFloat(petal.style.animationDuration)*1000);
-    }, 1500);
+    }, 3000);
   }
 
   /* ========== LIGHTBOX ========== */
@@ -542,7 +542,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function initHeartsCanvas() {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
-    setInterval(spawnHeart, 600);
+    setInterval(spawnHeart, 1200);
     animateHeartsLoop();
   }
 
@@ -552,7 +552,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function spawnHeart() {
-    if (hearts.length > 45) return;
+    if (hearts.length > 25) return;
     hearts.push({
       x: Math.random() * heartsCanvas.width,
       y: heartsCanvas.height + 20,
