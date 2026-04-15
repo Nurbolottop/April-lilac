@@ -303,19 +303,62 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  /* ========== VIDEO AUTOPLAY ON SCROLL ========== */
+  /* ========== VIDEO AUTOPLAY ON SCROLL (LAZY + OPTIMIZED) ========== */
   function initVideoAutoplay() {
     const videos = document.querySelectorAll('.story-video[data-autoplay]');
-    const overlays = document.querySelectorAll('.video-play-overlay');
+
+    // Lazy-load src only when video enters viewport
+    const lazyObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const video = entry.target;
+        const overlay = video.parentElement.querySelector('.video-play-overlay');
+
+        if (entry.isIntersecting) {
+          // Load video src if not yet loaded
+          if (!video.src && video.dataset.src) {
+            video.src = video.dataset.src;
+            video.load();
+          }
+
+          // Play when sufficiently visible
+          if (entry.intersectionRatio >= 0.4) {
+            video.play().then(() => {
+              if (overlay) overlay.classList.add('hidden');
+            }).catch(() => {});
+          }
+        } else {
+          // Pause and free buffer memory when off-screen
+          video.pause();
+          if (overlay) overlay.classList.remove('hidden');
+
+          // Free memory: remove src when fully off screen (not just partially)
+          if (entry.intersectionRatio === 0 && video.src) {
+            video.pause();
+            video.removeAttribute('src');
+            video.load(); // flush buffer
+          }
+        }
+      });
+    }, {
+      threshold: [0, 0.4, 1.0],
+      rootMargin: '100px 0px 100px 0px' // pre-load when 100px away
+    });
 
     // Click overlay to play/pause
-    overlays.forEach(overlay => {
+    document.querySelectorAll('.video-play-overlay').forEach(overlay => {
       overlay.addEventListener('click', (e) => {
         e.stopPropagation();
         const video = overlay.parentElement.querySelector('video');
+        if (!video) return;
+
+        // Ensure src is set
+        if (!video.src && video.dataset.src) {
+          video.src = video.dataset.src;
+          video.load();
+        }
+
         if (video.paused) {
-          video.play();
-          overlay.classList.add('hidden');
+          video.play().then(() => overlay.classList.add('hidden')).catch(() => {});
         } else {
           video.pause();
           overlay.classList.remove('hidden');
@@ -332,12 +375,15 @@ document.addEventListener('DOMContentLoaded', () => {
           video.pause();
           if (overlay) overlay.classList.remove('hidden');
         } else {
-          video.play();
-          if (overlay) overlay.classList.add('hidden');
+          if (!video.src && video.dataset.src) {
+            video.src = video.dataset.src;
+            video.load();
+          }
+          video.play().then(() => { if (overlay) overlay.classList.add('hidden'); }).catch(() => {});
         }
       });
 
-      // Trim end: skip last N seconds (set via data-trim-end attribute)
+      // Trim end: loop back before last N seconds
       const trimEnd = parseFloat(video.dataset.trimEnd);
       if (trimEnd > 0) {
         video.addEventListener('timeupdate', () => {
@@ -346,25 +392,9 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         });
       }
+
+      lazyObserver.observe(video);
     });
-
-    // Intersection Observer for autoplay
-    const videoObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        const video = entry.target;
-        const overlay = video.parentElement.querySelector('.video-play-overlay');
-        if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
-          video.play().then(() => {
-            if (overlay) overlay.classList.add('hidden');
-          }).catch(() => {});
-        } else {
-          video.pause();
-          if (overlay) overlay.classList.remove('hidden');
-        }
-      });
-    }, { threshold: 0.5 });
-
-    videos.forEach(v => videoObserver.observe(v));
   }
 
   /* ========== LETTER ANIMATION ========== */
