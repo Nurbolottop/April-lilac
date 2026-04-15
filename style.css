@@ -956,6 +956,61 @@ body {
   .photo-grid.grid-4 { grid-template-columns: 1fr; }
 }
 
+/* ========== LOADING SCREEN ========== */
+.loading-screen {
+  position: fixed; inset: 0;
+  z-index: 900;
+  display: none;
+  flex-direction: column;
+  align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 25%, #4a2668 50%, #2d1b4e 75%, #1a0a2e 100%);
+  transition: opacity 0.8s ease;
+}
+.loading-screen.active {
+  display: flex;
+}
+.loading-screen.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+.loading-content {
+  text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 1.2rem;
+}
+.loading-emoji {
+  font-size: 4rem;
+  animation: floatEmoji 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 25px rgba(232,69,122,0.6));
+}
+.loading-text {
+  font-family: var(--font-heading);
+  font-size: clamp(1.2rem, 4vw, 1.8rem);
+  font-weight: 300; font-style: italic;
+  color: rgba(255,255,255,0.85);
+  letter-spacing: 0.03em;
+}
+.loading-bar-wrap {
+  width: min(320px, 75vw);
+  height: 6px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.loading-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #b388eb, #e8457a, #f2a6c9);
+  border-radius: 10px;
+  transition: width 0.3s ease;
+  box-shadow: 0 0 12px rgba(232,69,122,0.5);
+}
+.loading-percent {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  color: rgba(255,255,255,0.6);
+  letter-spacing: 0.1em;
+}
+
 /* ========== FLOATING LYRICS ========== */
 .floating-lyric {
   position: fixed;

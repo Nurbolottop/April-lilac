@@ -393,28 +393,66 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  /* ========== PRELOAD ALL MEDIA ========== */
-  function preloadAllMedia() {
-    // Все фото которые будут нужны
-    const imageSrcs = [
-      'assets/images/we1.jpg', 'assets/images/we2.jpg', 'assets/images/we3.jpg',
-      'assets/images/we4.jpg', 'assets/images/we5.jpg', 'assets/images/we6.JPG',
-      'assets/images/we7.jpg', 'assets/images/we8.jpg', 'assets/images/we9.jpg',
-      'assets/images/we10.jpg', 'assets/images/we11.jpg', 'assets/images/we12.jpg',
-      'assets/images/we.jpg', 'assets/images/we_last.jpg'
-    ];
+  /* ========== PRELOAD ALL MEDIA + LOADING SCREEN ========== */
+  const loadingScreen  = document.getElementById('loading-screen');
+  const loadingBar     = document.getElementById('loading-bar');
+  const loadingPercent = document.getElementById('loading-percent');
 
-    // Предзагружаем фото через скрытые Image объекты
+  function preloadAllMedia(onComplete) {
+    const imageSrcs = [
+      'assets/images/we_основной.jpg',
+      'assets/images/we1.jpg',  'assets/images/we2.jpg',  'assets/images/we3.jpg',
+      'assets/images/we4.jpg',  'assets/images/we5.jpg',  'assets/images/we6.JPG',
+      'assets/images/we7.jpg',  'assets/images/we8.jpg',  'assets/images/we9.jpg',
+      'assets/images/we10.jpg', 'assets/images/we11.jpg', 'assets/images/we12.jpg',
+      'assets/images/we.jpg',   'assets/images/we_last.jpg'
+    ];
+    const videoEls = Array.from(document.querySelectorAll('.story-video'));
+
+    const total = imageSrcs.length + videoEls.length;
+    let loaded = 0;
+
+    function tick() {
+      loaded++;
+      const pct = Math.round((loaded / total) * 100);
+      loadingBar.style.width = pct + '%';
+      loadingPercent.textContent = pct + '%';
+      if (loaded >= total) {
+        // Все загружено — плавно скрываем
+        setTimeout(() => {
+          loadingScreen.classList.add('fade-out');
+          setTimeout(() => {
+            loadingScreen.classList.remove('active', 'fade-out');
+            loadingScreen.style.display = 'none';
+            onComplete();
+          }, 800);
+        }, 300);
+      }
+    }
+
+    // Загрузка фото
     imageSrcs.forEach(src => {
       const img = new Image();
+      img.onload  = tick;
+      img.onerror = tick; // не блокируем если файл не найден
       img.src = src;
     });
 
-    // Предзагружаем видео — переключаем preload с metadata на auto
-    document.querySelectorAll('.story-video').forEach(video => {
+    // Загрузка видео (ждём canplaythrough)
+    videoEls.forEach(video => {
       video.preload = 'auto';
-      // Начинаем загрузку буфера
-      if (video.src) video.load();
+      if (video.readyState >= 3) { // уже готово
+        tick();
+        return;
+      }
+      const onReady = () => {
+        video.removeEventListener('canplaythrough', onReady);
+        video.removeEventListener('error', onReady);
+        tick();
+      };
+      video.addEventListener('canplaythrough', onReady, { once: true });
+      video.addEventListener('error', onReady, { once: true });
+      video.load();
     });
   }
 
@@ -422,15 +460,16 @@ document.addEventListener('DOMContentLoaded', () => {
   startBtn.addEventListener('click', (e) => {
     e.stopPropagation();
 
-    // Сразу начинаем грузить все медиа в фоне
-    preloadAllMedia();
-
+    // Прячем стартовый экран, показываем загрузку
     startScreen.classList.add('hidden');
+    setTimeout(() => { startScreen.style.display = 'none'; }, 900);
 
-    setTimeout(() => {
+    loadingScreen.classList.add('active');
+
+    // Начинаем грузить всё медиа и ждём завершения
+    preloadAllMedia(() => {
+      // Всё загружено → показываем контент
       mainContent.classList.add('visible');
-      startScreen.style.display = 'none';
-
       playMusic();
       musicToggle.classList.add('visible');
       initScrollObserver();
@@ -443,7 +482,7 @@ document.addEventListener('DOMContentLoaded', () => {
       initLightbox();
       initVideoAutoplay();
       setTimeout(initCardParallax, 500);
-    }, 900);
+    });
   });
 
   /* ========== MUSIC ========== */
