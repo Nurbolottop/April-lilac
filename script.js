@@ -73,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!isMobile) {
       customCursor.style.left = mouseX + 'px';
       customCursor.style.top = mouseY + 'px';
+      customCursor.classList.add('active'); // show only after first move
     }
     const now = Date.now();
     if (now - lastTrailTime > 45) {
@@ -303,46 +304,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  /* ========== VIDEO AUTOPLAY ON SCROLL (LAZY + OPTIMIZED) ========== */
+  /* ========== VIDEO AUTOPLAY ON SCROLL ========== */
   function initVideoAutoplay() {
     const videos = document.querySelectorAll('.story-video[data-autoplay]');
 
-    // Lazy-load src only when video enters viewport
-    const lazyObserver = new IntersectionObserver((entries) => {
+    // IntersectionObserver: play when visible, pause when not
+    const videoObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         const video = entry.target;
         const overlay = video.parentElement.querySelector('.video-play-overlay');
-
-        if (entry.isIntersecting) {
-          // Load video src if not yet loaded
-          if ((!video.src || video.src === window.location.href) && video.dataset.src) {
-            video.src = video.dataset.src;
-            video.load();
-          }
-
-          // Play when sufficiently visible
-          if (entry.intersectionRatio >= 0.4) {
-            video.play().then(() => {
-              if (overlay) overlay.classList.add('hidden');
-            }).catch(() => {});
-          }
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.4) {
+          video.play().then(() => {
+            if (overlay) overlay.classList.add('hidden');
+          }).catch(() => {});
         } else {
-          // Pause and free buffer memory when off-screen
           video.pause();
           if (overlay) overlay.classList.remove('hidden');
-
-          // Free memory: remove src when fully off screen
-          if (entry.intersectionRatio === 0 && video.src && video.src !== window.location.href) {
-            video.pause();
-            video.removeAttribute('src');
-            video.load(); // flush buffer
-          }
         }
       });
-    }, {
-      threshold: [0, 0.4, 1.0],
-      rootMargin: '100px 0px 100px 0px' // pre-load when 100px away
-    });
+    }, { threshold: [0.4] });
 
     // Click overlay to play/pause
     document.querySelectorAll('.video-play-overlay').forEach(overlay => {
@@ -350,13 +330,6 @@ document.addEventListener('DOMContentLoaded', () => {
         e.stopPropagation();
         const video = overlay.parentElement.querySelector('video');
         if (!video) return;
-
-        // Ensure src is set
-        if ((!video.src || video.src === window.location.href) && video.dataset.src) {
-          video.src = video.dataset.src;
-          video.load();
-        }
-
         if (video.paused) {
           video.play().then(() => overlay.classList.add('hidden')).catch(() => {});
         } else {
@@ -375,8 +348,6 @@ document.addEventListener('DOMContentLoaded', () => {
           video.pause();
           if (overlay) overlay.classList.remove('hidden');
         } else {
-          if (!video.src || video.src === window.location.href) {
-            if (video.dataset.src) { video.src = video.dataset.src; video.load(); }
           video.play().then(() => { if (overlay) overlay.classList.add('hidden'); }).catch(() => {});
         }
       });
@@ -391,7 +362,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
 
-      lazyObserver.observe(video);
+      videoObserver.observe(video);
     });
   }
 

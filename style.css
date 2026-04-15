@@ -49,7 +49,6 @@ body {
   cursor: none;
 }
 
-/* ========== CUSTOM CURSOR ========== */
 .custom-cursor {
   position: fixed;
   width: 24px; height: 24px;
@@ -60,6 +59,12 @@ body {
   transform: translate(-50%, -50%);
   filter: drop-shadow(0 0 6px rgba(232,69,122,0.6));
   transition: transform 0.08s ease;
+  opacity: 0;
+  left: -100px;
+  top: -100px;
+}
+.custom-cursor.active {
+  opacity: 1;
 }
 
 /* ========== SPARKLE TRAIL ========== */
